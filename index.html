@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>AI Resume Analyzer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+  <!-- Animated Background -->
+  <div class="animated-bg"></div>
+
+  <div class="page">
+    <header class="top-title">AI RESUME ANALYZER</header>
+
+    <main class="main-grid">
+      <!-- LEFT: ATS -->
+      <section class="card">
+        <h2>Get Your ATS Score</h2>
+        <form action="/analyze" method="post" enctype="multipart/form-data">
+
+          <label>Upload Resume (PDF / DOCX / TXT)</label>
+          <input type="file" name="resume" accept=".pdf,.doc,.docx,.txt" required>
+
+          <label>Job Description</label>
+          <textarea 
+            name="job_description" 
+            placeholder="Paste job description here..."
+            class="text-box"
+            required></textarea>
+
+          <button type="submit" class="primary-btn">Analyze Your Resume</button>
+        </form>
+      </section>
+
+      <!-- RIGHT: Compare -->
+      <section class="card">
+        <h2>Compare Resumes</h2>
+        <form action="/compare" method="post" enctype="multipart/form-data">
+
+          <label>Upload Resume 1</label>
+          <input type="file" name="resume1" accept=".pdf,.doc,.docx,.txt" required>
+
+          <label>Upload Resume 2</label>
+          <input type="file" name="resume2" accept=".pdf,.doc,.docx,.txt" required>
+
+          <button type="submit" class="primary-btn">Compare Resumes</button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+</body>
+</html>

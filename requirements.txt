@@ -1,0 +1,8 @@
+flask
+pdfplumber
+docx2txt
+groq
+python-dotenv
+werkzeug
+os
+json

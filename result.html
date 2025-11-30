@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>ATS Result</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <!-- OVERRIDE CSS FOR RESULT PAGE ONLY -->
+  <style>
+    body {
+      background: #000 !important;
+      color: #c79aff !important;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .result-card {
+      background: rgba(255, 255, 255, 0.06) !important;
+      padding: 30px;
+      border-radius: 20px;
+      margin: 40px auto;
+      width: 90%;
+      max-width: 850px;
+      text-align: center;
+      box-shadow: 0 0 25px rgba(160, 44, 255, 0.35);
+    }
+
+    .top-title {
+      color: #d7b4ff !important;
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+
+    .score-num {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #e6ccff;
+      margin-bottom: 10px;
+    }
+
+    canvas {
+      max-width: 180px !important;
+      max-height: 180px !important;
+      margin: 10px auto;
+    }
+
+    .list-box {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 18px;
+      border-radius: 14px;
+      margin: 18px 0;
+      box-shadow: 0 0 10px rgba(160, 44, 255, 0.25);
+    }
+
+    .list-box h3 {
+      color: #e6ccff;
+      margin-bottom: 8px;
+    }
+
+    .suggestions {
+      background: rgba(255,255,255,0.08);
+      padding: 20px;
+      border-radius: 14px;
+      margin: 25px 0;
+      box-shadow: 0 0 10px rgba(160, 44, 255, 0.25);
+    }
+
+    .suggestions h3 {
+      color: #e6ccff;
+      margin-bottom: 10px;
+    }
+
+    .suggestions ul li {
+      margin: 6px 0;
+      color: #d7b4ff;
+      font-size: 1rem;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 20px;
+      font-size: 1.1rem;
+      color: #b076ff;
+      text-decoration: none;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div class="page">
+    <header class="top-title">Your ATS Match Score</header>
+
+    <main class="result-wrap">
+      <div class="result-card">
+
+        <div class="score-num">{{ score }}%</div>
+
+        <canvas id="scoreChart"></canvas>
+
+        <div class="lists">
+
+          <div class="list-box">
+            <h3>Required Skills (from JD)</h3>
+            {% if required %}
+              <p>{{ required | join(', ') }}</p>
+            {% else %}
+              <p><i>No skills detected in job description.</i></p>
+            {% endif %}
+          </div>
+
+          <div class="list-box">
+            <h3>Skills Found in Resume</h3>
+            {% if matched %}
+              <p>{{ matched | join(', ') }}</p>
+            {% else %}
+              <p><i>No matching skills found.</i></p>
+            {% endif %}
+          </div>
+
+          <div class="list-box">
+            <h3>Missing Skills (Add these)</h3>
+            {% if missing %}
+              <p>{{ missing | join(', ') }}</p>
+            {% else %}
+              <p><i>Great! You're matching all detected JD skills.</i></p>
+            {% endif %}
+          </div>
+
+          <!-- EXTRA SUGGESTIONS -->
+          <div class="suggestions">
+            <h3>Suggestions to Improve Your Resume</h3>
+            <ul>
+              <li>Use strong action verbs like “Led”, “Implemented”, “Built”.</li>
+              <li>Make skills section more keyword-focused.</li>
+              <li>Match JD keywords exactly.</li>
+              <li>Add measurable achievements.</li>
+              <li>Keep formatting clean and ATS-friendly.</li>
+            </ul>
+          </div>
+
+        </div>
+
+        <a class="back-link" href="/">← Back</a>
+
+      </div>
+    </main>
+  </div>
+
+<script>
+  const target = Number({{ score }});
+  const ctx = document.getElementById('scoreChart').getContext('2d');
+
+  let current = 0;
+  const chart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Match', 'Remaining'],
+      datasets: [{
+        data: [0, 100],
+        backgroundColor: ['#b076ff', '#3a3a3a'],
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      cutout: '70%',
+      plugins: {
+        legend: { display: false }
+      },
+      animation: { duration: 0 }
+    }
+  });
+
+  function animate() {
+    current += Math.max(1, Math.round((target - current) * 0.18));
+    if (current > target) current = target;
+
+    chart.data.datasets[0].data = [current, 100 - current];
+    chart.update('none');
+
+    if (current < target) requestAnimationFrame(animate);
+  }
+
+  requestAnimationFrame(animate);
+</script>
+
+</body>
+</html>
