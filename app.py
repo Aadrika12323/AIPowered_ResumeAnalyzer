@@ -113,14 +113,13 @@ def analyze():
             resume_text, job_description
         )
 
-        return render_template(
+       return render_template(
             "result.html",
             score=score,
-            resume_skills=resume_skills,
-            jd_skills=jd_skills,
+            required=jd_skills,
             matched=matched,
             missing=missing
-        )
+            )
 
     except Exception as e:
         print("UNEXPECTED ERROR:", e)
@@ -132,3 +131,4 @@ def analyze():
 # ---------------------------------------------------------
 if __name__ == "__main__":
     app.run(debug=True)
+
